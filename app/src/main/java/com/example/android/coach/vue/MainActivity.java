@@ -33,13 +33,16 @@ public class MainActivity extends AppCompatActivity {
          * permet de gérer un singleton une instance unique donc la seule chose qu'on peut
          * appelé c'est getinstance() qui est une méthode statique
          */
-        this.controle = Controle.getInstance();
     }
     //propriétés
         private TextView txtPoids;
         private TextView txtTaille;
         private TextView txtAge;
+        private EditText poidsValue;
+        private EditText tailleValue;
+        private EditText ageValue;
         private RadioButton rdHomme;
+        private RadioButton rdFemme;
         private TextView ibIMG;
         private ImageView imgSmiley;
         private Controle controle;
@@ -48,13 +51,19 @@ public class MainActivity extends AppCompatActivity {
      * Initialisation des liens avec les objets graphiques
      */
       private void init(){
-        txtPoids = (TextView)findViewById(R.id.txtPoids);
-        txtTaille = (TextView) findViewById(R.id.txtTaille);
-        txtAge = (TextView) findViewById(R.id.txtAge);
+      //  txtPoids = (TextView)findViewById(R.id.txtPoids);
+        poidsValue = findViewById(R.id.editTextNumber);
+       // txtTaille = (TextView) findViewById(R.id.txtTaille);
+        tailleValue = findViewById(R.id.editTextNumber2);
+      //  txtAge = (TextView) findViewById(R.id.txtAge);
+        ageValue = findViewById(R.id.editTextNumber3);
         rdHomme =(RadioButton) findViewById(R.id.rdHomme);
+        rdFemme =(RadioButton) findViewById(R.id.rdFemme);
         ibIMG = (TextView) findViewById(R.id.ibIMG);
         imgSmiley = (ImageView) findViewById(R.id.imgSmiley);
+        this.controle = Controle.getInstance(this);
         ecouteCalcul();
+        recupProfil();
       }
 
     /**
@@ -73,10 +82,10 @@ public class MainActivity extends AppCompatActivity {
               public void onClick(View v){
                   //Toast.makeText(MainActivity.this, "text", Toast.LENGTH_SHORT).show();
                  // Log.d("message", "clic ok sur le bouton calcul ***************");
-                  int poids = 0;
-                  int taille = 0;
-                  int age = 0;
-                  int sexe = 0;
+                  Integer poids = 0;
+                  Integer taille = 0;
+                  Integer age = 0;
+                  Integer sexe = 0;
                   /**
                    * tout ce qui va être dans le try-catch est exécuté mais si jamais ça plante le programme
                    * ne s'arrête pas violement le programme lorsqu'il y a une erreur d'exécution
@@ -84,10 +93,12 @@ public class MainActivity extends AppCompatActivity {
                    * Récupération des données saisies
                    */
                   try {
-                      poids = Integer.parseInt(txtPoids.getText().toString());
-                      taille = Integer.parseInt(txtTaille.getText().toString());
-                      age = Integer.parseInt(txtAge.getText().toString());
-                  }catch (Exception e){};
+                      poids = Integer.parseInt(poidsValue.getText().toString());
+                      taille = Integer.parseInt(tailleValue.getText().toString());
+                      age = Integer.parseInt(ageValue.getText().toString());
+                  }catch (Exception e){
+                      Log.d("Erreur", e.getMessage());
+                  };
                   if(rdHomme.isChecked()){
                       sexe = 1;
                   }
@@ -110,9 +121,9 @@ public class MainActivity extends AppCompatActivity {
      * @param age
      * @param sexe
      */
-        private void afficheResult(int poids,int taille,int age,int sexe){
+        private void afficheResult(Integer poids,Integer taille,Integer age,Integer sexe){
             //création et récupération des informations
-            this.controle.creerProfil(poids, taille,age, sexe);
+            this.controle.creerProfil(poids, taille,age, sexe, this);
             float img = this.controle.getImg();
             String message = this.controle.getMessage();
             //affichage
@@ -127,6 +138,26 @@ public class MainActivity extends AppCompatActivity {
                     imgSmiley.setImageResource(R.drawable.grasse);
                 }
             }
-            ibIMG.setText(String.format("#,01f",img)+" : IMG "+message);
+            ibIMG.setText(String.format("%.01f",img)+" : IMG "+message);
+        }
+
+    /**
+     * récupération du profil s'il a été serialisé
+     */
+    private void recupProfil(){
+           if(controle.getPoids() != null){
+               //txtPoids.setText(controle.getPoids().toString());
+               poidsValue.setText(controle.getPoids().toString());
+               //txtTaille.setText(controle.getTaille().toString());
+               tailleValue.setText(controle.getTaille().toString());
+             // txtAge.setText(controle.getAge().toString());
+              ageValue.setText(controle.getAge().toString());
+               rdFemme.setChecked(true);
+               if(controle.getSexe()==1){
+                   rdHomme.setChecked(true);
+               }
+               //simule le click sur le btn calcul
+               ((Button)findViewById(R.id.btnCalc)).performClick();
+           }
         }
 }
