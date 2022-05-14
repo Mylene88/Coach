@@ -8,15 +8,16 @@ import com.example.android.coach.outils.AsyncResponse;
 import org.json.JSONArray;
 
 public class AccesDistant implements AsyncResponse {
+//il faut qu'elle se connecte à un serveur donc elle a une adresse
+    //constante adresse de notre serveur l'adresse ipv4 de mon ordinateur
+    private static final  String SERVERADDR = "http://10.8.92.222/coach/serveurcoach.php";
 
-    //constante
-    private static final  String SERVERADDR = "http://192.168.56.1/coach/serveurcoach.php";
 
     public  AccesDistant(){
         super();
     }
     /**
-     * retour du serveur distant
+     *s'exécuter au retour du serveur distant
      * @param output
      */
     @Override

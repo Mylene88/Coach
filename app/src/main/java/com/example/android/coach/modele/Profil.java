@@ -62,7 +62,7 @@ public class Profil implements Serializable {
 
     private void calculIMG(){
         float tailleM = ((float)taille/100);
-        this.img = (float)((1.2*poids / (tailleM*tailleM)) + (0.23*age) - (10.83*sexe) - 5.4);
+       this.img = (float)((1.2*poids / (tailleM*tailleM)) + (0.23*age) - (10.83*sexe) - 5.4);
         //this.img = (float)(poids/(tailleM*tailleM));
     }
 
